@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ymkj.credit.mapper.MessagePushLogMapper">
+  <resultMap id="BaseResultMap" type="com.ymkj.credit.common.entity.MessagePushLog">
+
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="id_card" javaType="encrypt" jdbcType="VARCHAR" property="idCard" />
+    <result column="id_card_Bak"  jdbcType="VARCHAR" property="idCardBak" />
+    <result column="content" jdbcType="VARCHAR" property="content" />
+    <result column="batch_no" jdbcType="VARCHAR" property="batchNo" />
+    <result column="push_time" jdbcType="TIMESTAMP" property="pushTime" />
+    <result column="push_id" jdbcType="VARCHAR" property="pushId" />
+    <result column="return_result" jdbcType="VARCHAR" property="returnResult" />
+    <result column="return_message" jdbcType="VARCHAR" property="returnMessage" />
+    <result column="title" jdbcType="VARCHAR" property="title" />
+  </resultMap>
+  <resultMap id="MessageDtoMap" type="com.ymkj.credit.web.api.dto.MessageDto">
+   	<id column="id" jdbcType="BIGINT" property="id" />
+    <result column="content" jdbcType="VARCHAR" property="content" />
+    <result column="push_time" jdbcType="TIMESTAMP" property="pushTime" />
+  </resultMap> 	
+  <insert id="insertTable" parameterType="com.ymkj.credit.common.entity.MessagePushLog">
+  	insert into message_push_log
+  	<trim prefix="(" suffix=")">
+				id_card,
+				id_card_Bak,
+				content,
+				batch_no,
+				push_time,
+				push_id,
+				return_result,
+				return_message,
+				title
+		</trim>
+		<trim prefix="values (" suffix=")">
+				<!-- seq_tm_apply_field_info.nextval, -->
+				#{idCard,javaType=encrypt},
+				#{idCard,jdbcType=VARCHAR},
+				#{content,jdbcType=VARCHAR},
+				#{batchNo,jdbcType=VARCHAR},
+				#{pushTime,jdbcType=VARCHAR},
+				#{pushId,jdbcType=VARCHAR},
+				#{returnResult,jdbcType=VARCHAR},
+				#{returnMessage,jdbcType=VARCHAR},
+				#{title,jdbcType=VARCHAR}
+		</trim>
+  </insert>
+  <select id="queryByIdCard" parameterType="Map" resultMap="MessageDtoMap" >
+    SELECT content,
+    push_time as createTime,
+    title
+    FROM message_push_log m 
+    where m.id_card = #{idCard} 
+    order by m.push_time desc
+  </select>
+  
+   <select id="selectMessagePushLogListByConditions" parameterType="com.ymkj.credit.common.entity.MessagePushLog" resultMap="BaseResultMap">
+		select t.id,
+		t.id_card,
+		t.content,
+		 t.push_time as createTimeStr,
+		c.customer_name as customerName,
+		c.phone
+		from message_push_log t left join customer c on t.id_card=c.id_card where t.id_card is not null and t.id_card !='' and c.phone is not null
+        <if test="idCard!=null and idCard!='' ">  
+       	  AND c.id_card = #{idCard,javaType=encrypt} 
+      	</if>
+      	 <if test="phone!=null and phone!='' ">  
+       	  AND c.phone = #{phone,javaType=encrypt} 
+      	</if>
+      	<if test="customerName!=null and customerName!='' ">  
+       	  AND c.customer_name = #{customerName} 
+      	</if>
+      	 <if test="beginDate!=null and beginDate!='' ">  
+       	  AND t.push_time >= #{beginDate} 
+      	</if>
+      	 <if test="endDate!=null and endDate!='' ">  
+       	  AND t.push_time &lt; #{endDate} 
+      	</if>
+      	ORDER BY t.push_time DESC
+	</select>
+</mapper>

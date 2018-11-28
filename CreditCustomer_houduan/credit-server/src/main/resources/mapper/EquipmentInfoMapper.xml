@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ymkj.credit.mapper.IEquipmentInfoMapper">
+
+	<resultMap id="BaseResultMap" type="com.ymkj.credit.common.entity.EquipmentInfo">
+		<result column="ID" property="id" jdbcType="DECIMAL" />
+		<result column="DEVICE_ID" property="deviceId" jdbcType="VARCHAR" />
+		<result column="ACCOUNT" property="account" javaType="encrypt" jdbcType="VARCHAR" />
+		<result column="ACCOUNT_BAK" property="accountBak"  jdbcType="VARCHAR" />
+		<result column="LOGIN_DATE" property="loginDate" jdbcType="TIMESTAMP" />
+	</resultMap>
+	
+	<insert id="insertTable" parameterType="com.ymkj.credit.common.entity.EquipmentInfo">
+		insert into equipment
+		<trim prefix="(" suffix=")">
+				DEVICE_ID,
+				ACCOUNT,
+				ACCOUNT_BAK,
+				LOGIN_DATE
+		</trim>
+		<trim prefix="values (" suffix=")">
+				#{deviceId},
+				#{account,javaType=encrypt},
+				#{account},
+				#{loginDate}
+		</trim>
+	</insert>
+
+</mapper>

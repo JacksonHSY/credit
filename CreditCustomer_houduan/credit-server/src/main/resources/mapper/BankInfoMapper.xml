@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ymkj.credit.mapper.BankInfoMapper">
+  <resultMap id="BaseResultMap" type="com.ymkj.credit.common.entity.BankInfo">
+
+    <id column="ID" jdbcType="VARCHAR" property="id" />
+    <result column="CID" jdbcType="BIGINT" property="cid" />
+    <result column="BANK_NAME" jdbcType="VARCHAR" property="bankName" />
+    <result column="SUBBRANCH" jdbcType="VARCHAR" property="subbranch" />
+    <result column="ACC_NAME" jdbcType="VARCHAR" property="accName" />
+    <result column="ACC_NO" javaType="encrypt" jdbcType="VARCHAR" property="accNo" />
+    <result column="ACC_NO_BAK" jdbcType="VARCHAR" property="accNoBak" />
+    <result column="PHONE" javaType="encrypt" jdbcType="VARCHAR" property="phone" />
+    <result column="PHONE_BAK" jdbcType="VARCHAR" property="phoneBak" />
+    <result column="STATUS" jdbcType="VARCHAR" property="status" />
+    <result column="SIMAGE_URL" jdbcType="VARCHAR" property="simageUrl" />
+    <result column="GIMAGE_URL" jdbcType="VARCHAR" property="gimageUrl" />
+    <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="UPDATE_TIME" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="MEMO" jdbcType="VARCHAR" property="memo" />
+  </resultMap>
+  <resultMap id="BankInfoDtoMap" type="com.ymkj.credit.web.api.dto.BankInfoDto">
+   	<result column="GIMAGE_URL" jdbcType="VARCHAR" property="cardImgUrl" />
+    <result column="ACC_NAME" jdbcType="VARCHAR" property="ownerName" />
+    <result column="ACC_NO" javaType="encrypt" jdbcType="VARCHAR" property="cardNo" />
+    <result column="BANK_NAME" jdbcType="VARCHAR" property="bankName" />
+    <result column="SUBBRANCH" jdbcType="VARCHAR" property="branchBankName" />
+    <result column="PHONE" javaType="encrypt" jdbcType="VARCHAR" property="phoneNum" />
+  </resultMap>
+    <resultMap id="BankListInfoDtoMap" type="com.ymkj.credit.web.api.dto.BankListInfoDto">
+   	<result column="iconUrl" jdbcType="VARCHAR" property="iconUrl" />
+    <result column="bankName" jdbcType="VARCHAR" property="bankName" />
+    <result column="cardNo" jdbcType="VARCHAR" property="cardNo" />
+    <result column="id" jdbcType="VARCHAR" property="id" />
+  </resultMap>
+  <insert id="insertTable" parameterType="com.ymkj.credit.common.entity.BankInfo">
+  	insert into bank_info
+  	<trim prefix="(" suffix=")">
+				CID,
+				BANK_NAME,
+				SUBBRANCH,
+				ACC_NAME,
+				ACC_NO,
+				ACC_NO_BAK,
+				PHONE,
+				PHONE_BAK,
+				CREATE_TIME,
+				UPDATE_TIME,
+				SIMAGE_URL,
+				GIMAGE_URL,
+				MEMO,
+				STATUS
+		</trim>
+		<trim prefix="values (" suffix=")">
+				<!-- seq_tm_apply_field_info.nextval, -->
+				#{cid,jdbcType=VARCHAR},
+				#{bankName,jdbcType=VARCHAR},
+				#{subbranch,jdbcType=VARCHAR},
+				#{accName,jdbcType=VARCHAR},
+				#{accNo,javaType=encrypt},
+				#{accNo,jdbcType=VARCHAR},
+				#{phone,javaType=encrypt},
+				#{phone,jdbcType=VARCHAR},
+				sysdate(),
+				sysdate(),
+				#{simageUrl,jdbcType=VARCHAR},
+				#{gimageUrl,jdbcType=VARCHAR},
+				#{memo,jdbcType=VARCHAR},
+				#{status,jdbcType=VARCHAR}
+		</trim>
+  </insert>
+  <update id="updateByPrimaryKeyTable" parameterType="com.ymkj.credit.common.entity.BankInfo">
+  	update bank_info
+  	<set>
+  			 <if test="cid!= null and cid!='' ">  
+           		 CID = #{cid},
+      		 </if>
+      		 <if test="bankName!= null and bankName!='' ">  
+           		 BANK_NAME = #{bankName},
+      		 </if>
+      		 <if test="subbranch!= null and subbranch!='' ">  
+           		 SUBBRANCH = #{subbranch},
+      		 </if>
+      		 <if test="accName!= null and accName!='' ">  
+           		 ACC_NAME = #{accName},
+      		 </if>
+      		 <if test="accNo!= null and accNo!='' ">  
+           		 ACC_NO = #{accNo,javaType=encrypt},
+      		 </if>
+      		 <if test="accNo!= null and accNo!='' ">  
+           		 ACC_NO_BAK = #{accNo},
+      		 </if>
+      		 <if test="phone!= null and phone!='' ">  
+           		 PHONE = #{phone,javaType=encrypt},
+      		 </if>
+      		 <if test="phone!= null and phone!='' ">  
+           		 PHONE_BAK = #{phone},
+      		 </if>
+      		 <if test="simageUrl!= null and simageUrl!='' ">  
+           		 SIMAGE_URL = #{simageUrl},
+      		 </if> 
+      		 <if test="gimageUrl!= null and gimageUrl!='' ">  
+           		 GIMAGE_URL = #{gimageUrl},
+      		 </if> 
+      		 <if test="memo!= null and memo!='' ">  
+           		 MEMO = #{memo},
+      		 </if> 
+      		 <if test="status!= null and status!='' ">  
+           		 STATUS = #{status},
+      		 </if>
+  			 update_time = NOW()
+  	</set>
+  		   WHERE id = #{id}
+  </update>
+  
+   <select id="queryBankInfo" parameterType="Map" resultMap="BankListInfoDtoMap" >
+  	select b.ID,
+  	b.BANK_NAME as bankName,
+  	b.ACC_NO as cardNo 
+  	from bank_info b 
+  	where b.STATUS = '1'
+  <if test="CID!=null and CID!=''">  
+     AND b.CID = #{CID}
+  </if>
+  order by b.CREATE_TIME
+  </select>
+  
+  <select id="queryInfoById" parameterType="Map" resultMap="BankInfoDtoMap" >
+  	select GIMAGE_URL as cardImgUrl,ACC_NAME,ACC_NO,BANK_NAME,SUBBRANCH,PHONE
+  	from bank_info b where status='1'
+  	<if test="id!=null and id!=''">  
+     AND b.id = #{id}
+  </if>
+  </select>
+  <select id="querybySerialNumber" parameterType="String" resultMap="BaseResultMap">
+  	select * from bank_info b  
+  	where b.ID = 
+	(select bank_info_id from loan_order l 
+    where status="1"
+    <if test="serialNumber!=null and serialNumber!=''">  
+     AND l.serialNumber = #{serialNumber}
+  </if>
+  )
+  </select>
+  <select id="selectByAccNo"  parameterType="Map" resultMap="BaseResultMap">
+  	select * from bank_info  b where b.STATUS ='1'
+  	<if test="accNo!=null and accNO!=''">  
+     AND b.ACC_NO = #{accNo,javaType=encrypt}
+  </if>
+  <if test="cId!=null and cId!=''">  
+     AND b.CID = #{cId}
+  </if>
+  </select>
+  <select id="selectOneTable" parameterType="com.ymkj.credit.common.entity.BankInfo" resultMap="BaseResultMap">
+  		select * from bank_info where 1=1
+  		<if test="id!=null and id!='' ">  
+       	  AND ID = #{id} 
+      	</if>
+      	<if test="cid!=null and cid!='' ">  
+       	  AND CID = #{cid} 
+      	</if>
+      	<if test="bankName!=null and bankName!='' ">  
+       	  AND BANK_NAME = #{bankName} 
+      	</if>
+      	<if test="subbranch!=null and subbranch!='' ">  
+       	  AND SUBBRANCH = #{subbranch} 
+      	</if>
+      	<if test="accName!=null and accName!='' ">  
+       	  AND ACC_NAME = #{accName} 
+      	</if>
+      	<if test="accNo!=null and accNo!='' ">  
+       	  AND ACC_NO = #{accNo,javaType=encrypt} 
+      	</if>
+      	<if test="phone!=null and phone!='' ">  
+       	  AND PHONE = #{phone,javaType=encrypt} 
+      	</if>
+      	<if test="simageUrl!=null and simageUrl!='' ">  
+       	  AND SIMAGE_URL = #{simageUrl} 
+      	</if>
+      	<if test="gimageUrl!=null and gimageUrl!='' ">  
+       	  AND GIMAGE_URL = #{gimageUrl} 
+      	</if>
+      	<if test="memo!=null and memo!='' ">  
+       	  AND MEMO = #{memo} 
+      	</if>
+      	<if test="status!=null and status!='' ">  
+       	  AND STATUS = #{status} 
+      	</if>
+  </select>
+</mapper>

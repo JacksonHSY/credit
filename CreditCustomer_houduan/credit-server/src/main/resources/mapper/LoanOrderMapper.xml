@@ -1,0 +1,342 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ymkj.credit.mapper.LoanOrderMapper">
+  <resultMap id="BaseResultMap" type="com.ymkj.credit.common.entity.LoanOrder">
+
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="cId" jdbcType="BIGINT" property="cid" />
+    <result column="orderNum" jdbcType="VARCHAR" property="ordernum" />
+    <result column="city" jdbcType="VARCHAR" property="city" />
+    <result column="city_name" jdbcType="VARCHAR" property="cityName" />
+    <result column="profession" jdbcType="VARCHAR" property="profession" />
+    <result column="beforeTaxSalary" jdbcType="VARCHAR" property="beforetaxsalary" />
+    <result column="applyLimit" jdbcType="VARCHAR" property="applylimit" />
+    <result column="deadline" jdbcType="VARCHAR" property="deadline" />
+    <result column="purpose" jdbcType="VARCHAR" property="purpose" />
+    <result column="purpose_name" jdbcType="VARCHAR" property="purposeName" />
+    <result column="monthLiabilities" jdbcType="VARCHAR" property="monthliabilities" />
+    <result column="operatorCode" jdbcType="VARCHAR" property="operatorcode" />
+    <result column="property" jdbcType="VARCHAR" property="property" />
+    <result column="status" jdbcType="VARCHAR" property="status" />
+    <result column="createTime" jdbcType="TIMESTAMP" property="createtime" />
+    <result column="updateTime" jdbcType="TIMESTAMP" property="updatetime" />
+    <result column="flowStatus" jdbcType="VARCHAR" property="flowstatus" />
+    <result column="BANK_NAME" jdbcType="VARCHAR" property="bankName" />
+    <result column="SUBBRANCH" jdbcType="VARCHAR" property="subbranch" />
+    <result column="ACC_NO" javaType="encrypt" jdbcType="VARCHAR" property="accNo" />
+    <result column="ACC_NO_BAK" jdbcType="VARCHAR" property="accNoBak" />
+    <result column="PHONE" javaType="encrypt" jdbcType="VARCHAR" property="phone" />
+    <result column="PHONE_BAK" jdbcType="VARCHAR" property="phoneBak" />
+    <result column="GIMAGE_URL" jdbcType="VARCHAR" property="gimageUrl" />
+    
+    <result column="isRed" jdbcType="VARCHAR" property="isRed" />
+    <result column="isProject" jdbcType="VARCHAR" property="isProject" />
+    <result column="projectName" jdbcType="VARCHAR" property="projectName" />
+    <result column="projectCode" jdbcType="VARCHAR" property="projectCode" />
+    <result column="memo" jdbcType="VARCHAR" property="memo" />
+    <result column="bank_info_id" jdbcType="VARCHAR" property="bankInfoId" />
+    <result column="serialNumber" jdbcType="VARCHAR" property="serialNumber" />
+    
+  </resultMap>
+    <insert id="insertTable" parameterType="com.ymkj.credit.common.entity.LoanOrder">
+  	insert into loan_order
+  	<trim prefix="(" suffix=")">
+				  cId,
+				  orderNum,
+				  city,
+				  profession, 
+				  beforeTaxSalary,
+				  applyLimit,
+				  deadline,
+				  purpose,
+				  monthLiabilities,
+				  operatorCode,
+				  property, 
+				  status, 
+				  createTime,
+				  updateTime,
+				  flowStatus, 
+				  isRed,
+				  isProject,
+				  projectName, 
+				  memo, 
+				  serialNumber,
+				  projectCode, 
+				  reason, 
+				  city_name, 
+				  purpose_name, 
+				  bank_info_id, 
+				  SUBBRANCH, 
+				  BANK_NAME, 
+				  ACC_NO,
+				  ACC_NO_BAK, 
+				  PHONE,
+				  PHONE_BAK,
+				  GIMAGE_URL
+		</trim>
+		<trim prefix="values (" suffix=")">
+				    #{cid},
+				    #{ordernum,jdbcType=VARCHAR},
+				    #{city,jdbcType=VARCHAR},
+				    #{cityName,jdbcType=VARCHAR},
+				    #{profession,jdbcType=VARCHAR},
+				    #{beforetaxsalary,jdbcType=VARCHAR},
+				    #{applylimit,jdbcType=VARCHAR},
+				    #{deadline,jdbcType=VARCHAR},
+				    #{purpose,jdbcType=VARCHAR},
+				    #{purposeName,jdbcType=VARCHAR},
+				    #{monthliabilities,jdbcType=VARCHAR},
+				    #{operatorcode,jdbcType=VARCHAR},
+				    #{property,jdbcType=VARCHAR},
+				    #{status,jdbcType=VARCHAR},
+				    #{createtime,jdbcType=TIMESTAMP},
+				    #{updatetime,jdbcType=TIMESTAMP},
+				    #{flowstatus,jdbcType=VARCHAR},
+				    #{bankName,jdbcType=VARCHAR},
+				    #{subbranch,jdbcType=VARCHAR},
+				    #{accNo,javaType=encrypt},
+				    #{accNo,jdbcType=VARCHAR},
+				    #{phone,javaType=encrypt},
+				    #{phone,jdbcType=VARCHAR},
+				    #{gimageUrl,jdbcType=VARCHAR}
+		</trim>
+  </insert>
+  <select id="selectLoanOrders" parameterType="Map" resultMap="BaseResultMap" >
+    SELECT l.orderNum,
+    l.status, 
+    l.isProject,
+    l.projectName,
+    l.projectCode,
+    l.deadline,
+    l.serialNumber,
+    l.applyLimit,
+    l.reason,
+    l.memo,
+	(CASE
+    WHEN l.flowStatus = '0' 
+    THEN '受理中'
+    WHEN l.flowStatus = '9' 
+    THEN '办理中'
+    WHEN l.flowStatus = '1' 
+    THEN '办理中'
+    WHEN l.flowStatus = '2' 
+    THEN '已拒绝申请'
+    WHEN l.flowStatus = '3' 
+    THEN '已取消申请'
+     END ) as flowStatus,
+    
+    (CASE WHEN l.flowStatus = '9'
+     THEN '1'
+    ELSE l.flowStatus 
+    END
+    ) as flowstatusValue,
+    
+     (CASE WHEN l.flowStatus = '2'
+     THEN '1'
+      WHEN l.flowStatus = '3'
+     THEN '1'
+    ELSE l.isRed 
+    END
+    ) as  isRed,
+    
+    (CASE WHEN l.flowStatus = '0'
+    THEN '1'
+    WHEN l.flowStatus = '1' 
+    THEN '1'
+    WHEN l.flowStatus = '9' 
+    THEN '1'
+     WHEN l.flowStatus = '2' 
+    THEN '1'
+     WHEN l.flowStatus = '3' 
+    THEN '1'
+     END
+    ) as isShowStatus,
+    l.createTime,
+    l.updateTime,
+    date_format(l.createTime,'%Y-%m-%d') as applyDate
+    FROM loan_order l INNER JOIN customer c ON l.cId = c.id where l.status='1' and l.flowStatus !='1'
+    <if test="cId!=null and cId!=''">  
+      AND l.cId = #{cId}
+    </if>
+    order by l.createTime desc
+  </select>
+  <!--  <select id="selectOrderByFlows" parameterType="Map" resultMap="BaseResultMap" >
+    SELECT l.orderNum,
+    l.status, 
+    l.isRed,
+    l.isProject,
+    l.projectName,
+    l.projectCode,
+    l.deadline,
+    l.serialNumber,
+    l.applyLimit,
+    l.reason,
+    l.memo,
+	(CASE
+    WHEN l.flowStatus = '0' 
+    THEN '受理中' 
+    WHEN l.flowStatus = '1' 
+    THEN '已受理' 
+    WHEN l.flowStatus = '2' 
+    THEN '办理中'
+     WHEN l.flowStatus = '3' 
+    THEN '结束'
+     END ) as flowStatus,
+    l.createTime,
+    l.updateTime,
+    date_format(l.createTime,'%Y-%m-%d') as applyDate
+    FROM loan_order l where 1=1
+    <if test="cId!=null and cId!=''">  
+      AND l.cId = #{cId}
+    </if>
+    <if test="flowStatus!=null and flowStatus!=''">  
+      AND l.flowStatus = #{flowStatus}
+    </if>
+    <if test="status!=null and status!=''">  
+      AND l.status = #{status}
+    </if>
+  </select> -->
+  <insert id="insertLoanOrder" useGeneratedKeys="true" keyProperty="id" parameterType="com.ymkj.credit.common.entity.BusinessDepart">
+    INSERT INTO business_depart
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      id,
+      <if test="name != null and name!=''">
+        name,
+      </if>
+      <if test="phone != null and phone!=''">
+        phone,
+      </if>
+      <if test="address != null and address!=''">
+        address,
+      </if>
+      <if test="longitude != null and longitude!=''">
+        longitude,
+      </if>
+      <if test="latitude != null and latitude!=''">
+        latitude,
+      </if>
+      <if test="status != null and status!=''">
+        status,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="memo != null and memo!=''">
+        memo,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      #{id},
+      <if test="name != null and name!=''">
+        #{name},
+      </if>
+      <if test="phone != null and phone!=''">
+        #{phone},
+      </if>
+      <if test="address != null and address!=''">
+        #{address},
+      </if>
+      <if test="longitude != null and longitude!=''">
+        #{longitude},
+      </if>
+      <if test="latitude != null and latitude!=''">
+        #{latitude},
+      </if>
+      <if test="status != null and status!=''">
+        #{status},
+      </if>
+      <if test="createTime != null and createTime!=''">
+        #{createTime},
+      </if>
+      <if test="updateTime != null and updateTime!=''">
+        #{updateTime},
+      </if>
+      <if test="memo != null and memo!=''">
+        #{memo},
+      </if>
+    </trim>
+  </insert>
+   <select id="getBatchNumByOrderNum"  parameterType="Map" resultType="String">	
+   	SELECT distinct batch_num FROM idcardinfo WHERE customer_id = (select cId from loan_order l where l.orderNum = #{orderNum}) and status='1' 
+  </select>
+  <update id="updateBankId" parameterType="Map">
+  	  update loan_order
+	<set>
+  	   	<if test="id!=null and id!=''">  
+   		  bank_info_id = #{id},
+   		</if>
+   		 <if test="bankName!=null and bankName!=''">  
+   		    BANK_NAME = #{bankName},
+   		</if>
+  	    <if test="subbranch!=null and subbranch!=''">  
+   		  SUBBRANCH = #{subbranch},
+   		</if>
+  	    <if test="accNo!=null and accNo!=''">  
+   			  ACC_NO = #{accNo,javaType=encrypt},
+   		</if>
+   		<if test="accNo!=null and accNo!=''">  
+   			  ACC_NO_BAK = #{accNo},
+   		</if>
+    	<if test="phone!=null and phone!=''">  
+   			  PHONE = #{phone,javaType=encrypt},
+   		</if>
+   		<if test="phone!=null and phone!=''">  
+   			  PHONE_BAK = #{phone},
+   		</if>
+ 		<if test="gimageUrl!=null and gimageUrl!=''">  
+   			   GIMAGE_URL = #{gimageUrl},
+   		</if>
+   		<if test="gimageUrl!=null and gimageUrl!=''">  
+   			   GIMAGE_URL = #{gimageUrl},
+   		</if>
+  	 	 updateTime = #{updateTime}
+  	 	</set>
+  	  where serialNumber = #{serialNumber}
+  </update>
+   <select id="queryByOrderNo"  parameterType="Map" resultMap="BaseResultMap">
+  	select * from loan_order l where l.status="1"
+  	<if test="orderNum!=null and orderNum!=''">  
+      AND l.orderNum = #{orderNum}
+    </if>
+  </select> 
+     <select id="getTotalByCId"  parameterType="Map" resultMap="BaseResultMap" >
+  	select * from loan_order l WHERE l.flowStatus in('0','1','9')   AND l.status ='1'
+  	<if test="cId!=null and cId!=''">  
+      AND l.cId = #{cId}
+    </if>
+  </select> 
+   <update id="updateLoanOrder" parameterType="com.ymkj.credit.common.entity.LoanOrder">
+  		update loan_order
+  		<set>
+      		  <if test="flowstatus!= null and flowstatus!='' ">  
+           		 flowStatus = #{flowstatus},  
+      		 </if> 
+      		  <if test="reason!= null and reason!='' ">  
+           		 reason = #{reason},  
+      		 </if> 
+      		   <if test="memo!= null and memo!='' ">  
+           		 memo = #{memo},  
+      		 </if> 
+      		  <if test="isRed!= null and isRed!='' ">  
+           		 isRed = #{isRed},  
+      		 </if> 
+      		  <if test="isProject!= null and isProject!= '' ">  
+           		 isProject = #{isProject},  
+      		 </if> 
+      		   <if test="projectName!= null and projectName!= '' ">  
+           		 projectName = #{projectName},  
+      		 </if> 
+      		   <if test="deadline!= null and deadline!='' ">  
+           		 deadline = #{deadline},  
+      		 </if> 
+      		  <if test="applylimit!= null and applylimit!='' ">  
+           		 applylimit = #{applylimit},  
+      		 </if> 
+      		 updateTime= #{updatetime},serialNumber=#{serialNumber}
+  		</set>
+  		   WHERE orderNum = #{ordernum}
+  </update>  
+</mapper>

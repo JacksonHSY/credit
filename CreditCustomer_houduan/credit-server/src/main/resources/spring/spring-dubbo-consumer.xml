@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans  
+            http://www.springframework.org/schema/beans/spring-beans.xsd  
+            http://code.alibabatech.com/schema/dubbo  
+            http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+   <dubbo:application name="credit_server" />
+   <!-- 使用zookeeper注册中心暴露服务地址 -->  
+   <dubbo:registry protocol="zookeeper" address="${dubbo.registry.address}" />
+   <dubbo:consumer check="${dubbo.consumer.check}"/>
+   
+   <!-- 录单api -->
+    <dubbo:reference id="laocaibaoSignService" interface="com.ymkj.dms.api.laocaibao.service.LaocaibaoSignService" check="false"  retries="0" timeout="500000"/>
+	<dubbo:reference id="LaocaibaoSignFlowService" interface="com.ymkj.dms.api.laocaibao.service.LaocaibaoSignFlowService" check="false"  retries="0" timeout="500000"/>
+	<dubbo:reference id="LaocaibaoSignNoticeService" interface="com.ymkj.dms.api.laocaibao.service.LaocaibaoSignNoticeService" check="false"  retries="0" timeout="500000"/>
+	<dubbo:reference id="bankService" interface="com.ymkj.dms.api.bank.service.BankService" check="false"  retries="0" timeout="500000"/>
+	<dubbo:reference id="iZdqqExecuter" interface="com.ymkj.cms.biz.api.service.app.IZDQQExecuter" check="false" retries="0" timeout="500000" /> 
+	<dubbo:reference id="ILoanInfoInputExecuter" interface="com.ymkj.bms.biz.api.service.zdqq.apply.ILoanInfoInputExecuter" check="false" retries="0" timeout="10000" /> 
+	
+	<!-- 规则引擎 -->
+    <dubbo:reference id="iRuleEngineExecuter" interface="com.ymkj.rule.biz.api.service.IRuleEngineExecuter" check="false" retries="0" timeout="500000" />
+	<!-- tpp -->
+	<dubbo:reference id="iBrokerTradeService" interface="com.zendaimoney.thirdpp.trade.pub.service.IBrokerTradeService" check="false" retries="0" timeout="500000" />
+	<dubbo:reference id="iBaseService" interface="com.zendaimoney.thirdpp.trade.pub.service.IBaseService" check="false" retries="0" timeout="500000" /> 
+	<!--  -->
+	<dubbo:reference id="iEmployeeExecuter" interface="com.ymkj.pms.biz.api.service.IEmployeeExecuter" check="false" retries="0" timeout="500000" /> 
+	<dubbo:reference id="iBMSContractTemplateExecuter" interface="com.ymkj.cms.biz.api.service.master.IBMSContractTemplateExecuter" check="false" retries="0" timeout="500000" /> 
+	<dubbo:reference id="iBMSChannelCardExecuter" interface="com.ymkj.cms.biz.api.service.master.IBMSChannelCardExecuter" check="false" retries="0" timeout="500000" /> 
+	<dubbo:reference id="iBMSBankExecuter" interface="com.ymkj.cms.biz.api.service.master.IBMSBankExecuter" check="false" retries="0" timeout="500000" /> 
+</beans>

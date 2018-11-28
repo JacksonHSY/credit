@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans  
+            http://www.springframework.org/schema/beans/spring-beans.xsd  
+            http://code.alibabatech.com/schema/dubbo  
+            http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+	<dubbo:application name="${dubbo.application.name}" />
+
+	<!-- 使用zookeeper注册中心暴露服务地址 -->
+	<dubbo:registry protocol="zookeeper" address="${dubbo.registry.address}" />
+	
+	<!-- 监控中心配置，protocol="registry"，表示从注册中心发现监控中心地址
+	<dubbo:monitor protocol="registry"/> -->
+	
+	<!-- 配置dubbo的并发数 -->
+	<dubbo:protocol name="${dubbo.protocol.name}" threads="${dubbo.protocol.threads}" port="${dubbo.run.port}" />
+	
+	<!-- 当ProtocolConfig和ServiceConfig某属性没有配置时,采用此缺省值 -->
+	<dubbo:provider timeout="600000" threadpool="fixed" threads="100" accepts="1000" />
+	<!-- 对外公布接口 -->
+	<dubbo:service retries="0"  interface="com.ymkj.credit.api.IDealProcessorService" ref="dealProcessorService"/>
+	<bean id="dealProcessorService" class="com.ymkj.credit.api.impl.DealProcessorServiceImpl" />
+</beans>  

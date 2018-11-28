@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ymkj.credit.mapper.ApplyGroupMapper">
+  <resultMap id="BaseResultMap" type="com.ymkj.credit.common.entity.ApplyGroup">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="group_code" jdbcType="VARCHAR" property="groupCode" />
+    <result column="group_name" jdbcType="VARCHAR" property="groupName" />
+    <result column="group_parent_code" jdbcType="VARCHAR" property="groupParentCode" />
+    <result column="state" jdbcType="VARCHAR" property="state" />
+    <result column="creator" jdbcType="VARCHAR" property="creator" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+  </resultMap>
+  
+  <select id="queryByApplyCode" parameterType="com.ymkj.credit.common.entity.ApplyGroup" resultType="String">
+  	SELECT
+		ag.group_code
+	FROM
+		apply_group ag
+	WHERE ag.state = #{state} AND ag.group_parent_code = #{groupParentCode}
+  </select>
+  
+  <select id="selectByGroupCode" parameterType="com.ymkj.credit.common.entity.ApplyGroup" resultMap="BaseResultMap">
+  	select id from apply_group where group_code = #{groupCode}
+  </select>
+</mapper>

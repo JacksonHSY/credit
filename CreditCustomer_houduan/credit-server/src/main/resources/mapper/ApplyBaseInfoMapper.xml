@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ymkj.credit.mapper.ApplyBaseInfoMapper">
+  <resultMap id="BaseResultMap" type="com.ymkj.credit.common.entity.ApplyBaseInfo">
+    <id column="ID" jdbcType="BIGINT" property="id" />
+    <result column="loan_no" jdbcType="VARCHAR" property="loanNo" />
+    <result column="field_key" jdbcType="VARCHAR" property="fieldKey" />
+    <result column="field_obj_value" javaType="encrypt" jdbcType="LONGVARCHAR" property="fieldObjValue" />
+    <result column="field_obj_value_Bak"  jdbcType="LONGVARCHAR" property="fieldObjValueBak" />
+    <result column="field_arr_value" jdbcType="LONGVARCHAR" property="fieldArrValue" />
+    <result column="field_key_parent" jdbcType="VARCHAR" property="fieldKeyParent" />
+    <result column="tab" jdbcType="BIGINT" property="tab" />
+    <result column="state" jdbcType="VARCHAR" property="state" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+  </resultMap>
+  
+  <select id="selectByappNo" parameterType="com.ymkj.credit.common.entity.ApplyBaseInfo" resultMap="BaseResultMap">
+  		select * from apply_base_info where 1=1
+  		<if test="loanNo!= null and loanNo!='' ">  
+           	AND	 loan_no = #{loanNo}
+      	</if>
+      	<if test="fieldKey!= null and fieldKey!='' ">  
+           	AND	 field_key = #{fieldKey}
+      	</if>
+      	<if test="state!= null and state!='' ">  
+           	AND	 state = #{state}
+      	</if>
+  </select>
+  
+  <select id="selectByFiledKeyAndTab" parameterType="com.ymkj.credit.common.entity.ApplyBaseInfo" resultMap="BaseResultMap">
+  		select * from apply_base_info where loan_no = #{loanNo} <!-- and field_key = #{fieldKey} 
+  		<if test="tab != null ">
+			and	tab=#{tab} 
+		</if>
+  		 and field_key_parent = #{fieldKeyParent} and state = #{state} -->
+  </select>
+  <update id="updateByloanNoAndFiledKey" parameterType="com.ymkj.credit.common.entity.ApplyBaseInfo">
+  		update apply_base_info set field_obj_value = #{fieldObjValue,javaType=encrypt},field_obj_value_Bak = #{fieldObjValue}, update_date = #{updateDate} 
+  		where loan_no = #{loanNo} and field_key = #{fieldKey}
+  </update>
+  <!-- 更新联系人信息 -->
+   <update id="updateByloanNoAndFiledKeyForContact" parameterType="com.ymkj.credit.common.entity.ApplyBaseInfo">
+  		update apply_base_info set field_obj_value = #{fieldObjValue,javaType=encrypt},field_obj_value_Bak = #{fieldObjValue}, update_date = #{updateDate} 
+  		where loan_no = #{loanNo} and field_key = #{fieldKey} and tab = #{tab}
+  </update>
+  <delete id="deleteByFiledKey" parameterType="com.ymkj.credit.common.entity.ApplyBaseInfo">
+  		delete  from apply_base_info where loan_no = #{loanNo} and field_key = #{fieldKey}
+  </delete>
+  <insert id="insertByLoanAndKey" parameterType="com.ymkj.credit.common.entity.ApplyBaseInfo">
+  		insert into apply_base_info
+  	<trim prefix="(" suffix=")">
+				loan_no,
+				field_key,
+				field_obj_value,
+				field_obj_value_Bak,
+				field_key_parent,
+				tab,
+				state,
+				create_date,
+				update_date
+		</trim>
+		<trim prefix="values (" suffix=")">
+				<!-- seq_tm_apply_field_info.nextval, -->
+				#{loanNo},
+				#{fieldKey},
+				#{fieldObjValue,javaType=encrypt},
+				#{fieldObjValue},
+				#{fieldKeyParent},
+				#{tab},
+				#{state},
+				sysdate(),
+				sysdate()
+		</trim>
+  </insert>
+  
+  <update id="updateToTable" parameterType="com.ymkj.credit.common.entity.ApplyBaseInfo">
+  		update apply_base_info
+  		<set>
+  			 <if test="loanNo!= null and loanNo!='' ">  
+           		 loan_no = #{loanNo},
+      		 </if>
+      		 <if test="fieldKey!= null and fieldKey!='' ">  
+           		 field_key = #{fieldKey},
+      		 </if>
+      		 <if test="fieldObjValue!= null and fieldObjValue!='' ">  
+           		 field_obj_value = #{fieldObjValue,javaType=encrypt},
+      		 </if>
+      		 <if test="fieldObjValue!= null and fieldObjValue!='' ">  
+           		 field_obj_value_Bak = #{fieldObjValue},
+      		 </if>
+      		 <if test="fieldKeyParent!= null and fieldKeyParent!='' ">  
+           		 field_key_parent = #{fieldKeyParent},
+      		 </if>
+      		 <if test="tab!= null and tab!='' ">  
+           		 tab = #{tab},
+      		 </if>
+      		 <if test="state!= null and state!='' ">  
+           		 state = #{state},
+      		 </if>
+  			 update_date = NOW()
+  	</set>
+  		   WHERE id = #{id}
+  </update>
+  <select id="selectBaseTable" parameterType="com.ymkj.credit.common.entity.ApplyBaseInfo" resultMap="BaseResultMap">
+  		select * from apply_base_info where 1=1
+  			 <if test="id!= null and id!='' ">  
+           		AND id = #{id}
+      		 </if>
+  			 <if test="loanNo!= null and loanNo!='' ">  
+           		AND loan_no = #{loanNo}
+      		 </if>
+      		 <if test="fieldKey!= null and fieldKey!='' ">  
+           		AND field_key = #{fieldKey}
+      		 </if>
+      		 <if test="fieldKeyParent!= null and fieldKeyParent!='' ">  
+           		AND field_key_parent = #{fieldKeyParent}
+      		 </if>
+      		 <if test="tab!= null and tab!='' ">  
+           		AND tab = #{tab}
+      		 </if>
+      		 <if test="state!= null and state!='' ">  
+           		AND state = #{state}
+      		 </if>
+  </select>
+    <select id="selectBaseOne" parameterType="com.ymkj.credit.common.entity.ApplyBaseInfo" resultMap="BaseResultMap">
+  		select * from apply_base_info where 1=1
+  			 <if test="id!= null and id!='' ">  
+           		AND id = #{id}
+      		 </if>
+  			 <if test="loanNo!= null and loanNo!='' ">  
+           		AND loan_no = #{loanNo}
+      		 </if>
+      		 <if test="fieldKey!= null and fieldKey!='' ">  
+           		AND field_key = #{fieldKey}
+      		 </if>
+      		 <if test="fieldKeyParent!= null and fieldKeyParent!='' ">  
+           		AND field_key_parent = #{fieldKeyParent}
+      		 </if>
+      		 <if test="tab!= null">  
+           		AND tab = #{tab}
+      		 </if>
+      		 <if test="state!= null and state!='' ">  
+           		AND state = #{state}
+      		 </if>
+  </select>
+  <delete id="deleteByLoan" parameterType="com.ymkj.credit.common.entity.ApplyBaseInfo">
+  		delete from apply_base_info where
+  			 <if test="id!= null and id!='' ">  
+           		id = #{id}
+      		 </if>
+  			 <if test="loanNo!= null and loanNo!='' ">  
+           		AND loan_no = #{loanNo}
+      		 </if>
+      		 <if test="fieldKey!= null and fieldKey!='' ">  
+           		AND field_key = #{fieldKey}
+      		 </if>
+      		 <if test="fieldKeyParent!= null and fieldKeyParent!='' ">  
+           		AND field_key_parent = #{fieldKeyParent}
+      		 </if>
+      		 <if test="tab!= null">  
+           		AND tab = #{tab}
+      		 </if>
+      		 <if test="state!= null and state!='' ">  
+           		AND state = #{state}
+      		 </if>
+  </delete>
+</mapper>

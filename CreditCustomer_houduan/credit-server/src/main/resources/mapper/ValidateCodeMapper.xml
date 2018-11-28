@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ymkj.credit.mapper.ValidateCodeMapper">
+  <resultMap id="BaseResultMap" type="com.ymkj.credit.common.entity.ValidateCode">
+
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="phone" javaType="encrypt" jdbcType="VARCHAR" property="phone" />
+    <result column="phone_Bak" jdbcType="VARCHAR" property="phoneBak" />
+    <result column="sms_code" jdbcType="VARCHAR" property="smsCode" />
+    <result column="sms_type" jdbcType="VARCHAR" property="smsType" />
+    <result column="try_time" jdbcType="INTEGER" property="tryTime" />
+    <result column="status" jdbcType="VARCHAR" property="status" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="memo" jdbcType="VARCHAR" property="memo" />
+  </resultMap>
+  <insert id="insertTable" parameterType="com.ymkj.credit.common.entity.ValidateCode">
+  	insert into validate_code
+  	<trim prefix="(" suffix=")">
+				phone,
+				phone_Bak,
+				sms_code,
+				sms_type,
+				try_time,
+				status,
+				create_time,
+				update_time,
+				memo
+		</trim>
+		<trim prefix="values (" suffix=")">
+				<!-- seq_tm_apply_field_info.nextval, -->
+				#{phone,javaType=encrypt},
+				#{phone,jdbcType=VARCHAR},
+				#{smsCode,jdbcType=VARCHAR},
+				#{smsType,jdbcType=VARCHAR},
+				#{tryTime,jdbcType=VARCHAR},
+				#{status,jdbcType=VARCHAR},
+				sysdate(),
+				sysdate(),
+				#{memo,jdbcType=VARCHAR}
+		</trim>
+  </insert>
+  <update id="updateByPrimaryKeyTable" parameterType="com.ymkj.credit.common.entity.ValidateCode">
+  	update validate_code
+  	<set>
+  			 <if test="phone!= null and phone!='' ">  
+           		 phone = #{phone,javaType=encrypt},
+      		 </if>
+      		 <if test="phone!= null and phone!='' ">  
+           		 phone_Bak = #{phone},
+      		 </if>
+      		 <if test="smsCode!= null and smsCode!='' ">  
+           		 sms_code = #{smsCode},
+      		 </if>
+      		 <if test="smsType!= null and smsType!='' ">  
+           		 sms_type = #{smsType},
+      		 </if>
+      		 <if test="tryTime!= null and tryTime!='' ">  
+           		 try_time = #{tryTime},
+      		 </if>
+      		 <if test="status!= null and status!='' ">  
+           		 status = #{status},
+      		 </if>
+      		 <if test="memo!= null and memo!='' ">  
+           		 memo = #{memo},
+      		 </if>
+  			 update_time = NOW()
+  	</set>
+  		   WHERE id = #{id}
+  </update>
+  <select id="selectOneTable" parameterType="com.ymkj.credit.common.entity.ValidateCode" resultMap="BaseResultMap">
+  		select * from validate_code where 1=1
+  		<if test="id!= null and id!='' ">  
+          AND id = #{id}
+      	</if>
+  		<if test="phone!=null and phone!='' ">  
+       	  AND phone = #{phone,javaType=encrypt} 
+      	</if>
+      	<if test="smsCode!=null and smsCode!='' ">  
+       	  AND sms_code = #{smsCode} 
+      	</if>
+      	<if test="smsType!=null and smsType!='' ">  
+       	  AND sms_type = #{smsType} 
+      	</if>
+      	<if test="tryTime!=null and tryTime!='' ">  
+       	  AND try_time = #{tryTime} 
+      	</if>
+      	<if test="status!=null and status!='' ">  
+       	  AND status = #{status} 
+      	</if>
+      	<if test="memo!=null and memo!='' ">  
+       	  AND memo = #{memo} 
+      	</if>
+  </select>
+</mapper>

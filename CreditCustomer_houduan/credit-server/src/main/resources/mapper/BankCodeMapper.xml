@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ymkj.credit.mapper.BankCodeMapper">
+  <resultMap id="BaseResultMap" type="com.ymkj.credit.common.entity.BankCode">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="bank_code" jdbcType="VARCHAR" property="bankCode" />
+    <result column="bank_name" jdbcType="VARCHAR" property="bankName" />
+    <result column="bank" jdbcType="VARCHAR" property="bank" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  
+  <select id="queryByBankColum" parameterType="com.ymkj.credit.common.entity.BankCode" resultMap="BaseResultMap">
+  	select * from bank_code where 1=1
+  	<if test="bank != null">
+  		and bank = #{bank}
+  	</if>
+  	<if test="status != null">
+  		and status = #{status}
+  	</if>
+  </select>
+</mapper>

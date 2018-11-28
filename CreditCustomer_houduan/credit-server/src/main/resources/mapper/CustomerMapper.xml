@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ymkj.credit.mapper.CustomerMapper">
+  <resultMap id="BaseResultMap" type="com.ymkj.credit.common.entity.Customer">
+
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="customer_name" jdbcType="VARCHAR" property="customerName" />
+    <result column="phone" javaType="encrypt" jdbcType="VARCHAR" property="phone" />
+    <result column="phone_Bak" jdbcType="VARCHAR" property="phoneBak" />
+    <result column="id_card" javaType="encrypt" jdbcType="VARCHAR" property="idCard" />
+    <result column="id_card_Bak" jdbcType="VARCHAR" property="idCardBak" />
+    <result column="password" jdbcType="VARCHAR" property="password" />
+    <result column="gesture_password" jdbcType="VARCHAR" property="gesturePassword" />
+    <result column="account_manager_no" jdbcType="VARCHAR" property="accountManagerNo" />
+    <result column="busi_id" jdbcType="BIGINT" property="busiId" />
+    <result column="flow_status" jdbcType="VARCHAR" property="flowStatus" />
+    <result column="device_num" jdbcType="VARCHAR" property="deviceNum" />
+    <result column="push_id" jdbcType="VARCHAR" property="pushId" />
+    <result column="gesture_switch" jdbcType="VARCHAR" property="gestureSwitch" />
+    <result column="status" jdbcType="VARCHAR" property="status" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="memo" jdbcType="VARCHAR" property="memo" />
+    <result column="platform" jdbcType="VARCHAR" property="platform" />
+    <result column="id_card_begin_date" jdbcType="TIMESTAMP" property="idCardBeginDate" />
+    <result column="id_card_end_date" jdbcType="TIMESTAMP" property="idCardEndDate" />
+    <result column="lcb_account" javaType="encrypt" jdbcType="VARCHAR"  property="lcbAccount" />
+    <result column="lcb_account_Bak" jdbcType="VARCHAR" property="lcbAccountBak" />
+  </resultMap>
+  <insert id="insertTable" parameterType="com.ymkj.credit.common.entity.Customer">
+  	insert into customer
+		<trim prefix="(" suffix=")">
+				customer_name,
+				phone,
+				phone_Bak,
+				id_card,
+				id_card_Bak,
+				password,
+				gesture_password,
+				account_manager_no,
+				busi_id,
+				flow_status,
+				device_num,
+				push_id,
+				gesture_switch,
+				status,
+				create_time,
+				update_time,
+				memo,
+				platform,
+				id_card_begin_date,
+				id_card_end_date,
+				lcb_account,
+				lcb_account_Bak
+		</trim>
+		<trim prefix="values (" suffix=")">
+				<!-- seq_tm_apply_field_info.nextval, -->
+				#{customerName,jdbcType=VARCHAR},
+				#{phone,javaType=encrypt},
+				#{phone,jdbcType=VARCHAR},
+				#{idCard,javaType=encrypt},
+				#{idCard,jdbcType=VARCHAR},
+				#{password,jdbcType=VARCHAR},
+				#{gesturePassword,jdbcType=VARCHAR},
+				#{accountManagerNo,jdbcType=VARCHAR},
+				#{busiId,jdbcType=BIGINT},
+				#{flowStatus,jdbcType=VARCHAR},
+				#{deviceNum,jdbcType=VARCHAR},
+				#{pushId,jdbcType=VARCHAR},
+				#{gestureSwitch,jdbcType=VARCHAR},
+				#{status,jdbcType=VARCHAR},
+				sysdate(),
+				sysdate(),
+				#{memo,jdbcType=VARCHAR},
+				#{platform,jdbcType=VARCHAR},
+				#{idCardBeginDate,jdbcType=TIMESTAMP},
+				#{idCardEndDate,jdbcType=TIMESTAMP},
+				#{lcbAccount,javaType=encrypt},
+				#{lcbAccount,jdbcType=VARCHAR}
+		</trim>
+  </insert>
+  <select id="selectPageByColumn" parameterType="com.ymkj.credit.common.entity.Customer" resultMap="BaseResultMap">
+  	SELECT
+		id,
+		customer_name,
+		CONCAT(left(c.phone, 3),'****',RIGHT(c.phone,4)) phone,
+		CONCAT(left(c.id_card, 3),'***********',RIGHT(c.id_card,4)) id_card,
+		password,
+		gesture_switch,
+		IF( c.flow_status is not null and c.flow_status = '001002','是','否') flow_status,
+		create_time
+	 FROM customer c where 1=1
+  	<if test="customerName !='' and customerName != null">
+  		and c.customer_name like '%${customerName}%'
+  	</if>
+  	<if test="phone !='' and phone != null">
+  		and c.phone like '%${phone,javaType=encrypt}%'
+  	</if>
+  	<if test="idCard !='' and idCard != null">
+  		and c.id_card like '%${idCard,javaType=encrypt}%'
+  	</if>
+  	<if test="status !='' and status != null">
+  		and c.status = #{status}
+  	</if>
+  	<if test="beginDate !='' and beginDate != null">
+  		<![CDATA[
+			 and DATE_FORMAT(c.create_time,'%Y-%m-%d') >= #{beginDate}
+		]]>
+  	</if>
+  	<if test="endDate !='' and endDate != null">
+  		<![CDATA[
+			 and DATE_FORMAT(c.create_time,'%Y-%m-%d') <= #{endDate}
+		]]>
+  	</if>
+  </select>
+  <select id="selectListColumn" parameterType="com.ymkj.credit.common.entity.Customer" resultMap="BaseResultMap">
+  	SELECT *  FROM customer c where  c.id_card = #{idCard,javaType=encrypt} and c.flow_status != #{flowStatus} and c.id != #{id}
+  </select>
+  <update id="updateByPrimaryKeyTable" parameterType="com.ymkj.credit.common.entity.Customer">
+  	update customer
+  	<set>
+  			 <if test="customerName!= null and customerName!='' ">  
+           		 customer_name = #{customerName},
+      		 </if>
+      		 <if test="phone!= null and phone!='' ">  
+           		 phone = #{phone,javaType=encrypt},
+      		 </if>
+      		 <if test="phone!= null and phone!='' ">  
+           		 phone_Bak = #{phone},
+      		 </if>
+      		 <if test="idCard!= null and idCard!='' ">  
+           		 id_card = #{idCard,javaType=encrypt},
+      		 </if>
+      		 <if test="idCard!= null and idCard!='' ">  
+           		 id_card_Bak = #{idCard},
+      		 </if>
+      		 <if test="password!= null and password!='' ">  
+           		 password = #{password},
+      		 </if>
+      		 <if test="gesturePassword!= null and gesturePassword!='' ">  
+           		 gesture_password = #{gesturePassword},
+      		 </if>
+      		 <if test="accountManagerNo!= null and accountManagerNo!='' ">  
+           		 account_manager_no = #{accountManagerNo},
+      		 </if> 
+      		 <if test="busiId!= null and busiId!='' ">  
+           		 busi_id = #{busiId},
+      		 </if> 
+      		 <if test="flowStatus!= null and flowStatus!='' ">  
+           		 flow_status = #{flowStatus},
+      		 </if> 
+      		 <if test="deviceNum!= null and deviceNum!='' ">  
+           		 device_num = #{deviceNum},
+      		 </if> 
+      		 <if test="pushId!= null">  
+           		 push_id = #{pushId},
+      		 </if>
+      		 <if test="gestureSwitch!= null and gestureSwitch!='' ">  
+           		 gesture_switch = #{gestureSwitch},
+      		 </if>
+      		 <if test="status!= null and status!='' ">  
+           		 status = #{status},
+      		 </if>
+      		 <if test="memo!= null and memo!='' ">  
+           		 memo = #{memo},
+      		 </if>
+      		 <if test="platform!= null and platform!='' ">  
+           		 platform = #{platform},
+      		 </if>
+      		 <if test="idCardBeginDate!= null and idCardBeginDate!='' ">  
+           		 id_card_begin_date = #{idCardBeginDate},
+      		 </if>
+      		 
+      		 <if test="idCardEndDate!= null and idCardEndDate!='' ">  
+           		 id_card_end_date = #{idCardEndDate},
+      		 </if>
+      		 <if test="lcbAccount!= null and lcbAccount!='' ">  
+           		 lcb_account = #{lcbAccount,javaType=encrypt},
+      		 </if> 
+      		 <if test="lcbAccount!= null and lcbAccount!='' ">  
+           		 lcb_account_Bak = #{lcbAccount},
+      		 </if>
+  			 update_time = NOW()
+  	</set>
+  		   WHERE id = #{id}
+  </update>
+   <select id="selectByExampleTable" parameterType="com.ymkj.credit.common.entity.Customer" resultMap="BaseResultMap">
+  	SELECT *  FROM customer  where 1=1
+  			 <if test="id!= null and id!='' ">  
+           		and id = #{id}
+      		 </if>
+      		 <if test="phone!= null and phone!='' ">  
+           		and phone = #{phone,javaType=encrypt}
+      		 </if>
+      		 <if test="idCard!= null and idCard!='' ">  
+           		and id_card = #{idCard,javaType=encrypt}
+      		 </if>
+      		 <if test="flowStatus!= null and flowStatus!='' ">  
+           		and flow_status = #{flowStatus}
+      		 </if> 
+      		 
+      		 <if test="status!= null and status!='' ">  
+           		and status = #{status}
+      		 </if>
+  </select>
+  <select id="selectByExampleByPhone" parameterType="com.ymkj.credit.common.entity.Customer" resultMap="BaseResultMap">
+  	SELECT *  FROM customer  where 1=1
+  			 <if test="id!= null and id!='' ">  
+           		and id = #{id}
+      		 </if>
+      		 <if test="phone!= null and phone!='' ">  
+           		and phone = #{phone,javaType=encrypt}
+      		 </if>
+      		 <if test="flowStatus!= null and flowStatus!='' ">  
+           		<![CDATA[
+       	  		and flow_status <> #{flowStatus}
+       	  		]]> 
+      		 </if> 
+      		 
+      		 <if test="status!= null and status!='' ">  
+           		and status = #{status}
+      		 </if>
+  </select>
+  <select id="selectOneTable" parameterType="com.ymkj.credit.common.entity.Customer" resultMap="BaseResultMap">
+  	SELECT *  FROM customer  where 1=1
+  			 <if test="id!= null and id!='' ">  
+           		and id = #{id}
+      		 </if>
+  			 <if test="customerName!= null and customerName!='' ">  
+           		and customer_name = #{customerName}
+      		 </if>
+      		 <if test="phone!= null and phone!='' ">  
+           		and phone = #{phone,javaType=encrypt}
+      		 </if>
+      		 <if test="idCard!= null and idCard!='' ">  
+           		and id_card = #{idCard,javaType=encrypt}
+      		 </if>
+      		 <if test="password!= null and password!='' ">  
+           		and password = #{password}
+      		 </if>
+      		 <if test="gesturePassword!= null and gesturePassword!='' ">  
+           		and gesture_password = #{gesturePassword}
+      		 </if>
+      		 <if test="accountManagerNo!= null and accountManagerNo!='' ">  
+           		and account_manager_no = #{accountManagerNo}
+      		 </if> 
+      		 <if test="busiId!= null and busiId!='' ">  
+           		and busi_id = #{busiId}
+      		 </if> 
+      		 <if test="flowStatus!= null and flowStatus!='' ">  
+           		and flow_status = #{flowStatus}
+      		 </if> 
+      		 <if test="deviceNum!= null and deviceNum!='' ">  
+           		and device_num = #{deviceNum}
+      		 </if> 
+      		 <if test="pushId!= null and pushId!='' ">  
+           		and push_id = #{pushId}
+      		 </if>
+      		 <if test="gestureSwitch!= null and gestureSwitch!='' ">  
+           		and gesture_switch = #{gestureSwitch}
+      		 </if>
+      		 <if test="status!= null and status!='' ">  
+           		and status = #{status}
+      		 </if>
+      		 <if test="memo!= null and memo!='' ">  
+           		and memo = #{memo}
+      		 </if>
+      		 <if test="platform!= null and platform!='' ">  
+           		and platform = #{platform}
+      		 </if>
+      		 <if test="idCardBeginDate!= null and idCardBeginDate!='' ">  
+           		and id_card_begin_date = #{idCardBeginDate}
+      		 </if>
+      		 
+      		 <if test="idCardEndDate!= null and idCardEndDate!='' ">  
+           		and id_card_end_date = #{idCardEndDate}
+      		 </if>
+      		 <if test="lcbAccount!= null and lcbAccount!='' ">  
+           		and lcb_account = #{lcbAccount,javaType=encrypt}
+      		 </if> 
+  </select>
+</mapper>

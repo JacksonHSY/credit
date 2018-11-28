@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <title>证大前前</title>
+	  <style>
+        *{margin:0;padding:0;}
+    </style>
+</head>
+<body>
+<img src="" alt="" width="100%" id="img">
+
+<script>
+    function GetQueryString(name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)","i");
+        var r = window.location.search.substr(1).match(reg);
+        if (r!=null) return (r[2]); return null;
+    }
+    var img=GetQueryString('imgurl')
+    if(img)
+        document.getElementById('img').src = img;
+   
+</script>
+
+</body>
+</html>

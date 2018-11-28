@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ymkj.credit.mapper.ApplyLoanInfoMapper">
+  <resultMap id="BaseResultMap" type="com.ymkj.credit.common.entity.ApplyLoanInfo">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="id_card" javaType="encrypt" jdbcType="VARCHAR" property="idCard" />
+    <result column="id_card_Bak" jdbcType="LONGVARCHAR" property="idCardBak" />
+    <result column="loan_no" jdbcType="VARCHAR" property="loanNo" />
+    <result column="field_key" jdbcType="LONGVARCHAR" property="fieldKey" />
+    <result column="field_value" javaType="encrypt" jdbcType="LONGVARCHAR" property="fieldValue" />
+    <result column="field_value_Bak" jdbcType="LONGVARCHAR" property="fieldValueBak" />
+    <result column="status" jdbcType="VARCHAR" property="status" />
+    <result column="apply_status" jdbcType="VARCHAR" property="applyStatus" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="type" jdbcType="VARCHAR" property="type" />
+    <result column="zmScore" jdbcType="VARCHAR" property="zmScore" />
+  </resultMap>
+  <insert id="insertTable" parameterType="com.ymkj.credit.common.entity.ApplyLoanInfo">
+  	insert into apply_loan_info
+  	<trim prefix="(" suffix=")">
+				id_card,
+				id_card_Bak,
+				loan_no,
+				field_key,
+				field_value,
+				field_value_Bak,
+				status,
+				apply_status,
+				create_time,
+				update_time,
+				type,
+				zmScore
+		</trim>
+		<trim prefix="values (" suffix=")">
+				<!-- seq_tm_apply_field_info.nextval, -->
+				#{idCard,javaType=encrypt},
+				#{idCard,jdbcType=VARCHAR},
+				#{loanNo,jdbcType=VARCHAR},
+				#{fieldKey,jdbcType=LONGVARCHAR},
+				#{fieldValue,javaType=encrypt},
+				#{fieldValue,jdbcType=LONGVARCHAR},
+				#{status,jdbcType=VARCHAR},
+				#{applyStatus,jdbcType=VARCHAR},
+				sysdate(),
+				sysdate(),
+				#{type,jdbcType=VARCHAR},
+				#{zmScore,jdbcType=VARCHAR}
+		</trim>
+  </insert>
+  <select id="selectByIdCard" parameterType="com.ymkj.credit.common.entity.ApplyLoanInfo" resultMap="BaseResultMap">
+  		select * from apply_loan_info where id_card = #{idCard,javaType=encrypt} and loan_no = #{loanNo}
+  </select>
+  
+  <select id="selectByLoanNo" parameterType="com.ymkj.credit.common.entity.ApplyLoanInfo" resultMap="BaseResultMap">
+  		select * from apply_loan_info where loan_no = #{loanNo}
+  </select>
+  
+  <select id="selectLoanInfo" parameterType="Map" resultMap="BaseResultMap">
+  		select * from apply_loan_info where id_card = #{idCard,javaType=encrypt}
+  </select>
+  
+  <select id="queryByApplyLoanInfo" parameterType="com.ymkj.credit.common.entity.ApplyLoanInfo" resultMap="BaseResultMap">
+  		select * from apply_loan_info where apply_status != #{applyStatus} and id_card = #{idCard,javaType=encrypt}
+  </select>
+  
+  <update id="updateByLoanNo" parameterType="com.ymkj.credit.common.entity.ApplyLoanInfo">
+  		update apply_loan_info set apply_status = #{applyStatus} , update_time = #{updateTime} where loan_no = #{loanNo}
+  </update>
+  
+  <select id="selectLoanOne" parameterType="com.ymkj.credit.common.entity.ApplyLoanInfo" resultMap="BaseResultMap">
+  		select * from apply_loan_info where 1=1
+  			 <if test="id!= null and id!='' ">  
+           		AND id = #{id}
+      		 </if>
+  			 <if test="idCard!= null and idCard!='' ">  
+           		AND id_card = #{idCard,javaType=encrypt}
+      		 </if>
+      		 <if test="loanNo!= null and loanNo!='' ">  
+           		AND loan_no = #{loanNo}
+      		 </if>
+      		 <if test="fieldKey!= null and fieldKey!='' ">  
+           		AND field_key = #{fieldKey}
+      		 </if>
+      		 <if test="status!= null and status!='' ">  
+           		AND status = #{status}
+      		 </if>
+      		 <if test="applyStatus!= null and applyStatus!='' ">  
+           		AND apply_status = #{applyStatus}
+      		 </if>
+      		 <if test="type!= null and type!='' ">  
+           		AND type = #{type}
+      		 </if>
+  </select>
+  
+  <select id="selectLoanAll" parameterType="com.ymkj.credit.common.entity.ApplyLoanInfo" resultMap="BaseResultMap">
+  		select * from apply_loan_info where 1=1
+  			 <if test="id!= null and id!='' ">  
+           		AND id = #{id}
+      		 </if>
+  			 <if test="idCard!= null and idCard!='' ">  
+           		AND id_card = #{idCard,javaType=encrypt}
+      		 </if>
+      		 <if test="loanNo!= null and loanNo!='' ">  
+           		AND loan_no = #{loanNo}
+      		 </if>
+      		 <if test="fieldKey!= null and fieldKey!='' ">  
+           		AND field_key = #{fieldKey}
+      		 </if>
+      		 <if test="status!= null and status!='' ">  
+           		AND status = #{status}
+      		 </if>
+      		 <if test="applyStatus!= null and applyStatus!='' ">  
+           		AND apply_status = #{applyStatus}
+      		 </if>
+      		 <if test="type!= null and type!='' ">  
+           		AND type = #{type}
+      		 </if>
+  </select>
+  
+    <update id="updateToTable" parameterType="com.ymkj.credit.common.entity.ApplyLoanInfo">
+  	update apply_loan_info
+  	<set>
+  			 <if test="idCard!= null and idCard!='' ">  
+           		 id_card = #{idCard,javaType=encrypt},
+      		 </if>
+      		 <if test="idCard!= null and idCard!='' ">  
+           		 id_card_Bak = #{idCard},
+      		 </if>
+      		 <if test="loanNo!= null and loanNo!='' ">  
+           		 loan_no = #{loanNo},
+      		 </if>
+      		 <if test="fieldKey!= null and fieldKey!='' ">  
+           		 field_key = #{fieldKey},
+      		 </if>
+      		 <if test="fieldValue!= null and fieldValue!='' ">  
+           		 field_value = #{fieldValue,javaType=encrypt},
+      		 </if>
+      		 <if test="fieldValue!= null and fieldValue!='' ">  
+           		 field_value_Bak = #{fieldValue},
+      		 </if>
+      		 <if test="status!= null and status!='' ">  
+           		 status = #{status},
+      		 </if>
+      		 <if test="applyStatus!= null and applyStatus!='' ">  
+           		 apply_status = #{applyStatus},
+      		 </if>
+      		 <if test="type!= null and type!='' ">  
+           		 type = #{type},
+      		 </if>
+  			 update_time = NOW()
+  	</set>
+  		   WHERE id = #{id}
+  </update>
+  <update id="updateByLoan" parameterType="com.ymkj.credit.common.entity.ApplyLoanInfo">
+  		update apply_loan_info set zmScore = #{zmScore}  where loan_no = #{loanNo}
+  </update>
+</mapper>

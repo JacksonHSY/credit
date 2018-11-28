@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ymkj.credit.mapper.ApplyPicInfoMapper">
+  <resultMap id="BaseResultMap" type="com.ymkj.credit.common.entity.ApplyPicInfo">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="loan_no" jdbcType="VARCHAR" property="loanNo" />
+    <result column="pic_id" jdbcType="VARCHAR" property="picId" />
+    <result column="pic_url" jdbcType="VARCHAR" property="picUrl" />
+    <result column="field_key" jdbcType="VARCHAR" property="fieldKey" />
+    <result column="status" jdbcType="VARCHAR" property="status" />
+    <result column="img_name" jdbcType="VARCHAR" property="imgName" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+</mapper>

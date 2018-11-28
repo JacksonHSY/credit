@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ymkj.credit.mapper.ApplyContractInfoMapper">
+  <resultMap id="BaseResultMap" type="com.ymkj.credit.common.entity.ApplyContractInfo">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="id_no" javaType="encrypt" jdbcType="LONGVARCHAR" property="idNo" />
+    <result column="id_no_Bak" jdbcType="LONGVARCHAR"  property="idNoBak" />
+    <result column="pdf_id" jdbcType="VARCHAR" property="pdfId" />
+    <result column="status" jdbcType="VARCHAR" property="status" />
+    <result column="pdf_url" jdbcType="VARCHAR" property="pdfUrl" />
+    <result column="code" jdbcType="VARCHAR" property="code" />
+    <result column="is_not_sign" jdbcType="VARCHAR" property="isNotSign"/>
+    <result column="file_name" jdbcType="VARCHAR" property="fileName"/>
+    <result column="save_directory" jdbcType="VARCHAR" property="saveDirectory"/>
+    <result column="contract_name" jdbcType="VARCHAR" property="contractName"/>
+    <result column="image_url" jdbcType="VARCHAR" property="imageUrl" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <insert id="insertTable" parameterType="com.ymkj.credit.common.entity.ApplyContractInfo">
+  	insert into apply_contract_info
+  	<trim prefix="(" suffix=")">
+				id_no,
+				id_no_Bak,
+				pdf_id,
+				status,
+				pdf_url,
+				code,
+				is_not_sign,
+				file_name,
+				save_directory,
+				contract_name,
+				image_url,
+				create_time,
+				update_time
+		</trim>
+		<trim prefix="values (" suffix=")">
+				<!-- seq_tm_apply_field_info.nextval, -->
+				#{idNo,javaType=encrypt},
+				#{idNo,jdbcType=VARCHAR},
+				#{pdfId,jdbcType=VARCHAR},
+				#{status,jdbcType=VARCHAR},
+				#{pdfUrl,jdbcType=VARCHAR},
+				#{code,jdbcType=VARCHAR},
+				#{isNotSign,jdbcType=VARCHAR},
+				#{fileName,jdbcType=VARCHAR},
+				#{saveDirectory,jdbcType=VARCHAR},
+				#{contractName,jdbcType=VARCHAR},
+				#{imageUrl,jdbcType=VARCHAR},
+				sysdate(),
+				sysdate()
+		</trim>
+  </insert>
+  <update id="updateByPrimaryKeyTable" parameterType="com.ymkj.credit.common.entity.ApplyContractInfo">
+  	update apply_contract_info
+  	<set>
+  			 <if test="idNo!= null and idNo!='' ">  
+           		 id_no = #{idNo,javaType=encrypt},
+      		 </if>
+      		 <if test="idNo!= null and idNo!='' ">  
+           		 id_no_Bak = #{idNo},
+      		 </if>
+      		 <if test="pdfId!= null and pdfId!='' ">  
+           		 pdf_id = #{pdfId},
+      		 </if>
+      		 <if test="status!= null and status!='' ">  
+           		 status = #{status},
+      		 </if>
+      		 <if test="code!= null and code!='' ">  
+           		 code = #{code},
+      		 </if>
+      		 <if test="pdfUrl!= null and pdfUrl!='' ">  
+           		 pdf_url = #{pdfUrl},
+      		 </if>
+      		 <if test="imageUrl!= null and imageUrl!='' ">  
+           		 image_url = #{imageUrl},
+      		 </if>
+      		 <if test="fileName!= null and fileName!='' ">  
+           		 file_name = #{fileName},
+      		 </if>
+      		 <if test="saveDirectory!= null and saveDirectory!='' ">  
+           		 save_directory = #{saveDirectory},
+      		 </if>
+      		 <if test="contractName!= null and contractName!='' ">  
+           		 contract_name = #{contractName},
+      		 </if>
+      		 <if test="isNotSign!= null and isNotSign!='' ">  
+           		 is_not_sign = #{isNotSign},
+      		 </if>
+  			 update_time = NOW()
+  	</set>
+  		   WHERE id = #{id}
+  </update>
+  <select id="queryByIdNos" parameterType="com.ymkj.credit.common.entity.ApplyContractInfo" resultMap="BaseResultMap">
+  		select * from apply_contract_info where is_not_sign = #{isNotSign} and  id_no in
+  		<foreach collection="idNos" item="id" open="(" separator="," close=")">
+			#{id,javaType=encrypt}
+		</foreach>
+  </select>
+  <select id="selectContactTable" parameterType="com.ymkj.credit.common.entity.ApplyContractInfo" resultMap="BaseResultMap">
+  		select * from apply_contract_info where 1=1
+  			<if test="id!= null and id!='' ">  
+           		AND id = #{id}
+      		 </if>	
+  			 <if test="idNo!= null and idNo!='' ">  
+           		AND id_no = #{idNo,javaType=encrypt}
+      		 </if>
+      		 <if test="pdfId!= null and pdfId!='' ">  
+           		AND pdf_id = #{pdfId}
+      		 </if>
+      		 <if test="status!= null and status!='' ">  
+           		AND status = #{status}
+      		 </if>
+      		 <if test="code!= null and code!='' ">  
+           		AND code = #{code}
+      		 </if>
+      		 <if test="pdfUrl!= null and pdfUrl!='' ">  
+           		AND pdf_url = #{pdfUrl}
+      		 </if>
+      		 <if test="imageUrl!= null and imageUrl!='' ">  
+           		AND image_url = #{imageUrl}
+      		 </if>
+      		 <if test="fileName!= null and fileName!='' ">  
+           		AND file_name = #{fileName}
+      		 </if>
+      		 <if test="saveDirectory!= null and saveDirectory!='' ">  
+           		AND save_directory = #{saveDirectory}
+      		 </if>
+      		 <if test="contractName!= null and contractName!='' ">  
+           		AND contract_name = #{contractName}
+      		 </if>
+      		 <if test="isNotSign!= null and isNotSign!='' ">  
+           		AND is_not_sign = #{isNotSign}
+      		 </if>
+  </select>
+  <select id="selectContactTableOne" parameterType="com.ymkj.credit.common.entity.ApplyContractInfo" resultMap="BaseResultMap">
+  		select * from apply_contract_info where 1=1
+  			<if test="id!= null and id!='' ">  
+           		AND id = #{id}
+      		 </if>	
+  			 <if test="idNo!= null and idNo!='' ">  
+           		AND id_no = #{idNo,javaType=encrypt}
+      		 </if>
+      		 <if test="pdfId!= null and pdfId!='' ">  
+           		AND pdf_id = #{pdfId}
+      		 </if>
+      		 <if test="status!= null and status!='' ">  
+           		AND status = #{status}
+      		 </if>
+      		 <if test="code!= null and code!='' ">  
+           		AND code = #{code}
+      		 </if>
+      		 <if test="pdfUrl!= null and pdfUrl!='' ">  
+           		AND pdf_url = #{pdfUrl}
+      		 </if>
+      		 <if test="imageUrl!= null and imageUrl!='' ">  
+           		AND image_url = #{imageUrl}
+      		 </if>
+      		 <if test="fileName!= null and fileName!='' ">  
+           		AND file_name = #{fileName}
+      		 </if>
+      		 <if test="saveDirectory!= null and saveDirectory!='' ">  
+           		AND save_directory = #{saveDirectory}
+      		 </if>
+      		 <if test="contractName!= null and contractName!='' ">  
+           		AND contract_name = #{contractName}
+      		 </if>
+      		 <if test="isNotSign!= null and isNotSign!='' ">  
+           		AND is_not_sign = #{isNotSign}
+      		 </if>
+  </select>
+</mapper>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ymkj.credit.mapper.BankChannelMapper">
+  <resultMap id="BaseResultMap" type="com.ymkj.credit.common.entity.BankChannel">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="id_card" javaType="encrypt" jdbcType="VARCHAR" property="idCard" />
+    <result column="bank_code" jdbcType="VARCHAR" property="bankCode" />
+    <result column="flow_id" jdbcType="VARCHAR" property="flowId" />
+    <result column="pay_sys_no" jdbcType="VARCHAR" property="paySysNo" />
+    <result column="channel_name" jdbcType="VARCHAR" property="channelName" />
+  </resultMap>
+  <insert id="insertTable" parameterType="com.ymkj.credit.common.entity.BankChannel">
+  	insert into bank_channel
+		<trim prefix="(" suffix=")">
+				id_card,
+				id_card_Bak,
+				bank_code,
+				flow_id,
+				pay_sys_no,
+				channel_name
+		</trim>
+		<trim prefix="values (" suffix=")">
+				#{idCard,javaType=encrypt},
+				#{idCard,jdbcType=VARCHAR},
+				#{bankCode,jdbcType=VARCHAR},
+				#{flowId,jdbcType=VARCHAR},
+				#{paySysNo,jdbcType=VARCHAR},
+				#{channelName,jdbcType=VARCHAR}
+		</trim>
+  </insert>
+  
+  <select id="selectOneTable" parameterType="com.ymkj.credit.common.entity.Customer" resultMap="BaseResultMap">
+  	SELECT *  FROM bank_channel  where 1=1
+  			 <if test="id!= null and id!='' ">  
+           		and id = #{id}
+      		 </if>
+      		 <if test="idCard!= null and idCard!='' ">  
+           		and id_card = #{idCard,javaType=encrypt}
+      		 </if>
+      		 <if test="bankCode!= null and bankCode!='' ">  
+           		and bank_code = #{bankCode}
+      		 </if> 
+      		 <if test="flowId!= null and flowId!='' ">  
+           		and flow_id = #{flowId}
+      		 </if>
+  </select>
+</mapper>

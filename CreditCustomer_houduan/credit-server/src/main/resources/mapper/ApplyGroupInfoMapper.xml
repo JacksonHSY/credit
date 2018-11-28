@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ymkj.credit.mapper.ApplyGroupInfoMapper">
+  <resultMap id="BaseResultMap" type="com.ymkj.credit.common.entity.ApplyGroupInfo">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="apply_group_id" jdbcType="BIGINT" property="applyGroupId" />
+    <result column="loan_no" jdbcType="VARCHAR" property="loanNo" />
+    <result column="tip_msg" jdbcType="VARCHAR" property="tipMsg" />
+    <result column="state" jdbcType="VARCHAR" property="state" />
+    <result column="is_edit" jdbcType="VARCHAR" property="isEdit" />
+    <result column="is_rollback" jdbcType="VARCHAR" property="isRollback" />
+    <result column="is_requested" jdbcType="VARCHAR" property="isRequested" />
+    <result column="group_code" jdbcType="VARCHAR" property="groupCode"/>
+  </resultMap>
+  
+  <select id="queryByApplyGroupParentCode" parameterType="com.ymkj.credit.common.entity.ApplyGroupInfo" resultMap="BaseResultMap">
+  	SELECT
+	agi.*,
+	ag.group_code
+	FROM
+		apply_group ag
+	RIGHT JOIN apply_group_info agi ON ag.id = agi.apply_group_id
+	WHERE ag.state = #{state} AND ag.group_parent_code = #{groupCode} and agi.loan_no = #{loanNo}
+  </select>
+  
+    <select id="queryByApplyGroupInfoState" parameterType="com.ymkj.credit.common.entity.ApplyGroupInfo" resultType="String">
+  	SELECT
+	agi.state
+	FROM
+		apply_group ag
+	RIGHT JOIN apply_group_info agi ON ag.id = agi.apply_group_id
+	WHERE agi.loan_no = #{loanNo} AND ag.group_code = #{groupCode}
+  </select>
+  
+  <update id="updateByGroupId" parameterType="com.ymkj.credit.common.entity.ApplyGroupInfo">
+    update apply_group_info set 
+    <if test="tipMsg!=null and tipMsg!=''">  
+         tip_msg = #{tipMsg},
+      </if>
+      <if test="state!=null and state!=''">  
+         state = #{state},
+      </if>
+      <if test="isEdit!=null and isEdit!=''">  
+         is_edit = #{isEdit},
+      </if>
+      <if test="isRollback!=null and isRollback!=''">  
+         is_rollback = #{isRollback}
+      </if>
+     where loan_no = #{loanNo} and apply_group_id = #{applyGroupId}
+  </update>
+  <select id="queryApplyGroupInfoAll" parameterType="com.ymkj.credit.common.entity.ApplyGroupInfo" resultMap="BaseResultMap">
+  	SELECT agi.* from apply_group ag,apply_group_info agi WHERE ag.id = agi.apply_group_id AND loan_no = #{loanNo} AND agi.state = #{state} AND group_code in 
+      	<foreach collection="groupCodes" item="id" open="(" separator="," close=")">
+			#{id,jdbcType=VARCHAR}
+		</foreach>
+		
+  </select>
+  <select id="queryById" parameterType="com.ymkj.credit.common.entity.ApplyGroupInfo" resultMap="BaseResultMap">
+      select * from apply_group_info where 1=1
+      <if test="loanNo!=null and loanNo!=''">  
+         AND loan_no = #{loanNo}
+      </if>
+      <if test="applyGroupId!=null and applyGroupId!=''">  
+         AND apply_group_id = #{applyGroupId}
+      </if>
+  </select>
+    <select id="queryByLoan" parameterType="com.ymkj.credit.common.entity.ApplyGroupInfo" resultMap="BaseResultMap">
+      select * from apply_group_info where 1=1
+      <if test="loanNo!=null and loanNo!=''">  
+         AND loan_no = #{loanNo}
+      </if>
+      <if test="applyGroupId!=null and applyGroupId!=''">  
+         AND apply_group_id = #{applyGroupId}
+      </if>
+  </select>
+  <update id="updateMsg" parameterType="com.ymkj.credit.common.entity.ApplyGroupInfo">
+      update apply_group_info set tip_msg = #{tipMsg} where loan_no = #{loanNo}
+  </update>
+</mapper>

@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ymkj.credit.server.mapper.LoanOrderMapper">
+  <resultMap id="BaseResultMap" type="com.ymkj.credit.common.entity.LoanOrder">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="cId" jdbcType="BIGINT" property="cid" />
+    <result column="orderNum" jdbcType="VARCHAR" property="ordernum" />
+    <result column="city" jdbcType="VARCHAR" property="city" />
+    <result column="city_Name" jdbcType="VARCHAR" property="cityName" />
+    <result column="profession" jdbcType="VARCHAR" property="profession" />
+    <result column="beforeTaxSalary" jdbcType="VARCHAR" property="beforetaxsalary" />
+    <result column="applyLimit" jdbcType="VARCHAR" property="applylimit" />
+    <result column="deadline" jdbcType="VARCHAR" property="deadline" />
+    <result column="purpose" jdbcType="VARCHAR" property="purpose" />
+     <result column="purposeName" jdbcType="VARCHAR" property="purposeName" />
+    <result column="monthLiabilities" jdbcType="VARCHAR" property="monthliabilities" />
+    <result column="operatorCode" jdbcType="VARCHAR" property="operatorcode" />
+    <result column="property" jdbcType="VARCHAR" property="property" />
+    <result column="status" jdbcType="VARCHAR" property="status" />
+    <result column="createTime" jdbcType="TIMESTAMP" property="createtime" />
+    <result column="updateTime" jdbcType="TIMESTAMP" property="updatetime" />
+    <result column="flowStatus" jdbcType="VARCHAR" property="flowstatus" />
+    <result column="isRed" jdbcType="VARCHAR" property="isRed" />
+    <result column="isProject" jdbcType="VARCHAR" property="isProject" />
+    <result column="projectName" jdbcType="VARCHAR" property="projectName" />
+    <result column="projectCode" jdbcType="VARCHAR" property="projectCode" />
+    <result column="memo" jdbcType="VARCHAR" property="memo" />
+    <result column="reason" jdbcType="VARCHAR" property="reason" />
+    <result column="serialNumber" jdbcType="VARCHAR" property="serialNumber" />
+  </resultMap>
+  <resultMap id="loanOrderDtoResultMap" type="com.ymkj.credit.common.dto.LoanOrderDto">
+    <result column="orderNum" jdbcType="VARCHAR" property="orderNum" />
+    <result column="createTime" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="customerName" jdbcType="VARCHAR" property="customerName" />
+    <result column="applyLimit" jdbcType="VARCHAR" property="applyLimit" />
+    <result column="serialNumber" jdbcType="VARCHAR" property="serialNumber" />
+    <result column="flowStatus" jdbcType="VARCHAR" property="flowStatus" />
+    <result column="idCard" jdbcType="VARCHAR" property="idCard" />
+    <result column="mobile" jdbcType="VARCHAR" property="mobile" />
+    <result column="city" jdbcType="VARCHAR" property="city" />
+    <result column="cityName" jdbcType="VARCHAR" property="cityName" />
+    <result column="beforeTaxSalary" jdbcType="VARCHAR" property="beforeTaxSalary" />
+    <result column="profession" jdbcType="VARCHAR" property="profession" />
+    <result column="deadline" jdbcType="VARCHAR" property="deadline" />
+     <result column="purpose" jdbcType="VARCHAR" property="purpose" />
+     <result column="purposeName" jdbcType="VARCHAR" property="purposeName" />
+    <result column="projectName" jdbcType="VARCHAR" property="projectName" />
+    <result column="applyDate" jdbcType="VARCHAR" property="applyDate" />
+  </resultMap>
+   <select id="getPage"  parameterType="Map" resultMap="loanOrderDtoResultMap">	
+   SELECT lo.orderNum,cm.customer_name as customerName,lo.applyLimit,lo.serialNumber,
+    (CASE WHEN lo.flowStatus = '9' 
+     		THEN '1'
+     	 WHEN lo.flowStatus = '3'
+     	    THEN '2'
+    ELSE flowStatus 
+    END
+    ) as flowStatus,
+    cm.id_card as idCard,cm.phone as mobile,lo.city,lo.city_Name as cityName,lo.beforeTaxSalary,lo.profession,lo.deadline,lo.purpose,lo.purpose_name as purposeName,lo.projectName as projectName,date_format(lo.createTime,'%Y-%m-%d') as applyDate
+ 	FROM loan_order lo left join customer cm on lo.cId=cm.id where lo.status='1'
+ 	 <if test="orderNum!=null and orderNum!=''">  
+          AND  lo.orderNum = #{orderNum}
+    </if>
+  	<if test="accountManagerNo!=null and accountManagerNo!=''">  
+          AND  lo.operatorCode = #{accountManagerNo}
+    </if>
+    <if test="customerName!=null and customerName!=''">  
+         AND  cm.customer_name LIKE CONCAT(CONCAT('%', #{customerName}), '%')
+    </if>
+     <if test="orderStatus!=null and orderStatus!=''">  
+   		<choose>
+   			<when test="orderStatus==2">
+   				  AND  lo.flowStatus in (2,3) 
+   			</when>
+   			<otherwise>
+   			  AND  lo.flowStatus = (#{orderStatus}) 
+   			</otherwise>
+   		</choose>
+    </if>
+    order by lo.createTime desc
+  </select>
+  
+  <update id="updateLoanOrder" parameterType="com.ymkj.credit.common.entity.LoanOrder">
+  		update loan_order
+  		<set>
+  			<!--  <if test="serialNumber!= null and serialNumber!='' ">  
+           		 serialNumber = #{serialNumber},  
+      		 </if>  --> 
+      		  <if test="flowstatus!= null and flowstatus!='' ">  
+           		 flowStatus = #{flowstatus},  
+      		 </if> 
+      		  <if test="reason!= null and reason!='' ">  
+           		 reason = #{reason},  
+      		 </if> 
+      		   <if test="memo!= null and memo!='' ">  
+           		 memo = #{memo},  
+      		 </if> 
+      		  <if test="isRed!= null and isRed!='' ">  
+           		 isRed = #{isRed},  
+      		 </if> 
+      		  <if test="isProject!= null and isProject!= '' ">  
+           		 isProject = #{isProject},  
+      		 </if> 
+      		   <if test="projectName!= null and projectName!= '' ">  
+           		 projectName = #{projectName},  
+      		 </if> 
+      		   <if test="deadline!= null and deadline!='' ">  
+           		 deadline = #{deadline},  
+      		 </if> 
+      		  <if test="applylimit!= null and applylimit!='' ">  
+           		 applylimit = #{applylimit},  
+      		 </if> 
+      		 updateTime= #{updatetime},serialNumber=#{serialNumber}
+  		</set>
+  		   WHERE orderNum = #{ordernum}
+  </update>
+   <select id="getBatchNumByOrderNum"  parameterType="Map" resultType="String">	
+   	SELECT batch_num FROM idcardinfo WHERE customer_id = (select cId from loan_order l where l.orderNum = #{orderNum}) and status='1' and type='0'
+  </select>
+  
+</mapper>
