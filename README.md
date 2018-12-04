@@ -1,1 +1,1 @@
-这是一个网关项目
+getway-project
